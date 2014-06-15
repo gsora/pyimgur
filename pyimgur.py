@@ -42,3 +42,17 @@ def imgurAuth(clientID, clientSecret, PIN):
 	refreshToken = realData["refresh_token"]
 
 	return (accessToken, refreshToken)
+
+def imgurUpload(accessToken, b64Image):
+	upURL = "https://api.imgur.com/3/image"
+	upValues = { "image": b64Image }
+	headers = { "Authorization": "Bearer {}".format(accessToken)}
+	upData = urllib.parse.urlencode(upValues)
+	upData = upData.encode('utf-8')
+	reqUp = urllib.request.Request(upURL, upData, headers)
+	responseUp = urllib.request.urlopen(reqUp)
+	the_pageUp = responseUp.read()
+
+	realLink = json.loads(the_pageUp.decode('utf-8'))
+
+	return realLink["data"]["link"]
